@@ -9,7 +9,7 @@ from scipy.stats import zscore
 from PIL import Image
 
 # Sample earthquake dataset (replace with your own dataset)
-df = pd.read_csv('C:/Users/User/Documents/Sample Dashboard/Sample 1/earthquake_1995-2023.csv')
+df = pd.read_csv('earthquake_1995-2023.csv')
 
 # Preprocessing
 df.drop(['alert', 'continent'], axis=1, inplace=True)
@@ -53,17 +53,17 @@ def intro():
     st.markdown("Earthquakes have been the leading causes of death by natural disasters. "
                 "Recent magnitude-7.2 earthquake event dated 17 November 2023 hit Southern Philippines causing devastating effects on property and lives.")
     
-    video_file = open('C:/Users/User/Documents/Sample Dashboard/Sample 1/Strong 6.7 earthquake hits Philippines without any tsunami threat - Friday, November 17, 2023.mp4', 'rb')
+    video_file = open('Strong 6.7 earthquake hits Philippines without any tsunami threat - Friday, November 17, 2023.mp4', 'rb')
     video_bytes = video_file.read()
     st.video(video_bytes)
     st.caption('Source: https://www.youtube.com/watch?v=zJ-ucEG3xAE&ab_channel=euronews')
 
     st.markdown("A strong earthquake is measured based on its magnitude. The stronger the magnitude, the deadlier the earthquake scale. The Richter scale is a logarithmic scale that measures the magnitude of an earthquake based on the energy released.")
-    image2 = Image.open('C:/Users/User/Documents/Sample Dashboard/Sample 1/richter scale.png')
+    image2 = Image.open('richter scale.png')
     st.image(image2, caption='Source: https://www.britannica.com/science/Richter-scale')
 
     st.markdown("90% of the world's earthquakes and 80% of the world's deadliest earthquakes are located in the Ring Of Fire (S. Gonzaga, 2023). The Ring of Fire is a string of volcanoes and sites of seismic activity, or earthquakes, around the edges of the Pacific Ocean.")
-    image = Image.open('C:/Users/User/Documents/Sample Dashboard/Sample 1/pacific-ring-of-fire.jpg')
+    image = Image.open('pacific-ring-of-fire.jpg')
     st.image(image, caption='Source: https://education.nationalgeographic.org/resource/plate-tectonics-ring-fire/')
 
 def map_graph():
