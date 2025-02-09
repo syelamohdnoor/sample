@@ -33,11 +33,11 @@ df = df[(zscore(df['depth']) < 3) & (zscore(df['depth']) > -3)]
 # Streamlit App
 st.set_page_config(page_title="Earthquake Visualization & Prediction", layout="wide")
 
-# Tabs for different sections
-tab1, tab2, tab3 = st.tabs(["Introduction", "Descriptive Analysis", "Prediction"])
+# Sidebar Dropdown Menu
+page = st.sidebar.selectbox("Choose a page:", ["Introduction", "Descriptive Analysis", "Prediction"])
 
-# Tab 1: Introduction
-with tab1:
+# Page: Introduction
+if page == "Introduction":
     st.header("Earthquake Visualization and Prediction")
     st.subheader("By: Lim Vern Sin (0133235), Sarah Darlyna Bt Mohd Radzi (0134768)")
     
@@ -53,11 +53,11 @@ with tab1:
     image = Image.open('pacific-ring-of-fire.jpg')
     st.image(image, caption='Source: National Geographic')
 
-# Tab 2: Descriptive Analysis (with sub-tabs)
-with tab2:
-    subtab1, subtab2, subtab3 = st.tabs(["Global Earthquake Map", "Top 20 Earthquake Countries", "Tsunami Occurrences"])
-    
-    with subtab1:
+# Page: Descriptive Analysis
+elif page == "Descriptive Analysis":
+    sub_option = st.sidebar.selectbox("Choose a view:", ["Global Earthquake Map", "Top 20 Earthquake Countries", "Tsunami Occurrences"])
+
+    if sub_option == "Global Earthquake Map":
         st.subheader("Earthquake Occurrences Worldwide Based On Magnitude Since 1995")
         fig = px.scatter_geo(
             df, lat='latitude', lon='longitude',
@@ -70,7 +70,7 @@ with tab2:
         st.plotly_chart(fig, theme="streamlit")
         st.markdown("Darker colors indicate higher earthquake magnitudes.")
 
-    with subtab2:
+    elif sub_option == "Top 20 Earthquake Countries":
         st.subheader("Top 20 Countries With Most Frequent Earthquake Occurrences")
         count = df['country'].value_counts().head(20)
         
@@ -81,7 +81,7 @@ with tab2:
         st.pyplot(fig)
         st.markdown("This shows countries with the highest number of earthquakes.")
 
-    with subtab3:
+    elif sub_option == "Tsunami Occurrences":
         st.subheader('Number Of Tsunami Occurrences Based On Countries')
         selected_option = st.selectbox('Select Event', ['Tsunami', 'No Tsunami'])
         
@@ -95,8 +95,8 @@ with tab2:
             st.pyplot(fig)
             st.markdown("This shows countries that experienced tsunamis after an earthquake.")
 
-# Tab 3: Prediction
-with tab3:
+# Page: Prediction
+elif page == "Prediction":
     st.subheader('Earthquake Magnitude Prediction For The Following Year')
     st.markdown("The prediction model was trained using **Random Forest Regression** with **73% accuracy**.")
 
