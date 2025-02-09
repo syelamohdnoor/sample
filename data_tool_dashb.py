@@ -98,7 +98,7 @@ def top_20():
     sns.set(style="darkgrid")
     sbd = sns.countplot(x='country', color='#66FFFF', hue='magnitude', data=df, order=count.index, dodge=False)
     sbd.set_xticklabels(sbd.get_xticklabels(), rotation=90)
-    st.set_option('deprecation.showPyplotGlobalUse', False)
+    #st.set_option('deprecation.showPyplotGlobalUse', False)
     st.pyplot()
     st.markdown("This visualization narrows down the scope of which countries have the highest number of earthquake events, along with the magnitude of these events.")
 
