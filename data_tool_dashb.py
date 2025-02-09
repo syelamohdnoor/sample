@@ -5,6 +5,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy.stats import zscore
 from PIL import Image
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestRegressor
 
 # Load dataset
 df = pd.read_csv('earthquake_1995-2023.csv')
@@ -104,15 +107,38 @@ def tsunami():
         
         st.markdown("This visualization shows which countries experienced tsunamis after an earthquake event.")
 
-# Streamlit App Layout
-st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Introduction", "Global Earthquake Map", "Top 20 Countries with Earthquakes", "Tsunami Occurrences"])
+def predict_magnitude():
+    X = df[['latitude', 'longitude', 'depth']]
+    y = df['magnitude']
+    
+    # Create a pipeline for preprocessing and regression
+    model = Pipeline([
+        ('scaler', StandardScaler()), 
+        ('regressor', RandomForestRegressor(n_estimators=100, random_state=42))
+    ])
+    
+    model.fit(X, y)
 
-if page == "Introduction":
-    intro()
-elif page == "Global Earthquake Map":
-    map_graph()
-elif page == "Top 20 Countries with Earthquakes":
-    top_20()
-elif page == "Tsunami Occurrences":
-    tsunami()
+    st.subheader('Earthquake Magnitude Prediction For The Following Year')
+    st.markdown("The prediction model was trained with a Random Forest Regression model with 73% accuracy.")
+    
+    lat = st.number_input('Enter Latitude:', min_value=-90, max_value=90, value=0)
+    long = st.number_input('Enter Longitude:', min_value=-180, max_value=180, value=0)
+    depth = st.number_input('Enter Depth (km):', min_value=0, max_value=700, value=10)
+
+    if st.button('Predict Magnitude'):
+        new_location = [[lat, long, depth]]
+        predicted_magnitude = model.predict(new_location)[0]
+        st.write(f'Predicted Magnitude: {predicted_magnitude:.2f}')
+
+# Sidebar Navigation
+page_names_to_funcs = {
+    "Introduction": intro,
+    "Global Earthquake Map": map_graph,
+    "Top 20 Earthquake Countries": top_20,
+    "Tsunami Occurrences": tsunami,
+    "Prediction": predict_magnitude
+}
+
+demo_name = st.sidebar.selectbox("Choose a page", page_names_to_funcs.keys())
+page_names_to_funcs[demo_name]()
