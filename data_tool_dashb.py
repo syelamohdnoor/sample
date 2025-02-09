@@ -92,16 +92,6 @@ def map_graph():
     st.plotly_chart(fig, theme="streamlit")
     st.markdown("The world map and the scatter traces on it are the earthquake events that happen in that specific location. The darker it is, the higher the magnitude of the earthquake event")
 
-def top_20():
-    count = df['country'].value_counts().head(20)
-    st.subheader("Top 20 Countries With Most Frequent Earthquake Occurrences And Their Magnitude")
-    sns.set(style="darkgrid")
-    sbd = sns.countplot(x='country', color='#66FFFF', hue='magnitude', data=df, order=count.index, dodge=False)
-    sbd.set_xticklabels(sbd.get_xticklabels(), rotation=90)
-    #st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.pyplot()
-    st.markdown("This visualization narrows down the scope of which countries have the highest number of earthquake events, along with the magnitude of these events.")
-
 def tsunami():
     st.subheader('Number Of Tsunami Occurrences Based On Countries')
     selected_option = st.selectbox('Select Event', ['Tsunami', 'No Tsunami'])
@@ -109,34 +99,16 @@ def tsunami():
     if selected_option == 'Tsunami':
         filtered_data_1 = df[df['tsunami'] == 1]
         st.subheader('Countplot For Tsunami Occurrences Based On Countries')
+
         sns.set_theme(style="darkgrid")
         sns.set(font_scale=0.5)
-        sbd = sns.countplot(x='country', data=filtered_data_1, color='#0066FF')
-        sbd.set_xticklabels(sbd.get_xticklabels(), rotation=90)
-        st.pyplot()
-        st.markdown("This visualization shows which countries experienced tsunamis after an earthquake event. The top 3 countries that frequently experience tsunamis are often island nations (Indonesia, Papua New Guinea, Vanuatu).")
 
-    elif selected_option == 'No Tsunami':
-        filtered_data = df[df['tsunami'] == 0]
-        st.subheader('Countplot For No Tsunami Occurrences Based On Countries')
-        sns.set_theme(style="darkgrid")
-        sns.set(font_scale=0.4)
-        sbd = sns.countplot(x='country', data=filtered_data, color='#0066FF')
-        sbd.set_xticklabels(sbd.get_xticklabels(), rotation=90)
-        st.pyplot()
-        st.markdown("This visualization shows which countries did not experience tsunamis after an earthquake event. More countries that are not island nations, such as Mexico, fall into this category.")
+        fig, ax = plt.subplots(figsize=(10, 5))  # Create figure explicitly
+        sns.countplot(x='country', data=filtered_data_1, color='#0066FF', ax=ax)
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
 
-def magnitude_count():
-    map_graph()
-    top_20()
-    fig_n = px.line(df, 'date_time', 'magnitude', labels={'index': 'Year', 'date_time': 'Year'})
-    fig_n.update_traces(marker=dict(line=dict(color='#FFFFFF', width=2)))
-    fig_n.update_traces(textposition='top center')
-    fig_n.update_layout(title_text=' ', title_x=0.5)
-    st.subheader("Magnitude Of Earthquake Events From 1995-2023")
-    st.plotly_chart(fig_n, theme="streamlit")
-    st.markdown("The time series visualization above shows the trend of earthquake magnitudes from 1995 until 2023. The strongest earthquake recorded during this period was in 2004 with a magnitude of 9.0.")
-    tsunami()
+        st.pyplot(fig)  # Pass figure explicitly
+        st.markdown("This visualization shows which countries experienced tsunamis after an earthquake event.")
 
 def predict_magnitude():
     X = df[['latitude', 'longitude', 'depth']]
